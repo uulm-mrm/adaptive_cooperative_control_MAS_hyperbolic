@@ -1,0 +1,10 @@
+***tmp.m
+**/build
+***.m~
+***.mat
+***.rej
+***.orig
+***.aux
+***.log
+.PowerFolder/
+*.asv
