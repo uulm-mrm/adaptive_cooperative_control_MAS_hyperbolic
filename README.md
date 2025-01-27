@@ -7,6 +7,6 @@ This repository implements methods for the simulation and the design of adaptive
 The programms were tested and developed using Matlab R2024b.
 The following Matlab toolboxes and external libraries are used.
 
-# Matlab toolboxes
+## Matlab toolboxes
 
 Frequently, the following Matlab toobloxes are used: control_toolbox, optimization_toolbox, symbolic_toolbox
