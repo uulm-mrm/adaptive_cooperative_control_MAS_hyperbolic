@@ -19,6 +19,12 @@ Frequently, the following Matlab toobloxes are used: control_toolbox, optimizati
 
 # Usage
 
+Include all folders, including the external toolboxes, to your Matlab path.
+For an introduction to the frequently employed and very useful quantity.Discrete framework provided by the coni toolbox, see the Example +quantity\example.m of in the coni folder.
+Note that the calculation of the backstepping kernel stores all computed kernels in a build-folder in the working directory. 
+Hence, it is advised to always work in the same root working folder.
+The skrpits that were used to generate the examples that appear in my papers and presentations can be found in the directory +publication_examples, other skripts are in +examples.
+
 # References
 
 [1] Enderes, T.; J. Deutscher: Cooperative robust output regulation for networks of hyperbolic systems
