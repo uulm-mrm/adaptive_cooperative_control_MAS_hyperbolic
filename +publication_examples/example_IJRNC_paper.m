@@ -2,23 +2,16 @@ tDomain = quantity.Domain("t", linspace(0, 20, 8001));
 zDomain = quantity.Domain("z", linspace(0, 1, 21));
 exportData = true;
 
-% adjacencyMatrix = [0 0 0 0; 0 0 0.9 0; 1.4 0 0 0.7; 0 1 1.2 0];
 adjacencyMatrix = [0 0 0 0; 1.4 0 0 0.7; 0 0.9 0 0; 0 1.2 1 0];
-% adjacencyMatrix = [0 0 0 0; 1.4 0 0 0; 0 0.9 0 0; 0 1.2 1 0];
 splitDomain = tDomain.split(60);
-% S = quantity.Piecewise({[0 0 0; 0 0 pi/2; 0 -pi/2 0] * quantity.Discrete.ones(1, splitDomain(1)), [0 0 0; 0 0 pi/4; 0 -pi/4 0] * quantity.Discrete.ones(1, splitDomain(2))});
-% S = quantity.Discrete(S);
 S0 = 0;
 S1 = [0 pi/2.5; -pi/2.5, 0];
 S2 = [0 pi/5; -pi/5, 0];
 S3 = [0 pi/7; -pi/7, 0];
-% S = blkdiag(S0, S1, S2, S3);
 S = blkdiag(S0, S1, S2);
-% S = blkdiag(S0, S1);
 charpol = charpoly(S);
 S = [[zeros(1, length(S)-1); eye(length(S)-1)], -flip(charpol(2:end)).'];
 S = quantity.Discrete.ones(1, tDomain)*S;
-% S = quantity.Discrete.zeros(1, tDomain);
 
 syms z t;
 discOne = quantity.Discrete.ones(1, zDomain);
@@ -71,19 +64,13 @@ output = model.Output("controlOutput", "C", C-dC, "C0", C0-dC0, "C1", C1-dC1);
 agents{4} = model.Transport(Lambda-dLambda, "A", A-dA, "input", input, "output", output, "Q0", Q0-dQ0, "Q1", Q1-dQ1, "prefix", "agent4");
 
 mas = MultiAgentHeterogenous(agents, adjacencyMatrix);
-% mas = MultiAgent(adjacencyMatrix, Lambda, "A", A, "output", output, "Q0", Q0, "Q1", Q1,...
-%     "G1", G1, "G2", G2, "G3", G3, "G4", G4);
 
 
 mu = 4;
 L = 4*eye(length(S));
 
 b = {ones(length(S), 1)*2, ones(length(S), 1)*2};
-% reference = quantity.Piecewise({quantity.Discrete([2*sin(pi/2*splitDomain(1).grid), cos(pi/2*splitDomain(1).grid)], splitDomain(1)), ...
-% 	quantity.Discrete([sin(pi/4*splitDomain(2).grid), 2*cos(pi/4*splitDomain(2).grid)], splitDomain(2))});
-% reference = quantity.Discrete(reference);
 reference = quantity.Discrete([-2*sin(pi/2.5*splitDomain(1).grid) + 1.5*cos(pi/5*splitDomain(1).grid), 1.8*cos(pi/2.5*splitDomain(1).grid) + sin(pi/5*splitDomain(1).grid)+1], tDomain);
-% reference = quantity.Discrete([2*sin(pi/2*splitDomain(1).grid), cos(pi/2*splitDomain(1).grid)], tDomain);
 icAgent1 = quantity.Symbolic([0; 0; 0; 0], zDomain);
 icV1 = [0; 0; 0; 0; 0; 0];
 ic = {"agent1.x", icAgent1,...
@@ -106,7 +93,6 @@ simulationSetting = {'t', tDomain.grid};
 simDataOpen = mas.network.simulate(simulationSetting, ics);
 imc = InternalModelController(adjacencyMatrix, Lambda, b, mu, L, "A", A, "output", output, "Q0", Q0, "Q1", Q1, "nCoef", 40);
 
-% SObs = imc.reconstructInternalModel(S);
 
 
 disturbance = quantity.Piecewise({quantity.Discrete.ones(1, splitDomain(1)), ...
@@ -128,8 +114,6 @@ simData = tool.simulateInternalModel(simulationSetting, mas, imc, "initialCondit
 
 for idx = 1:length(adjacencyMatrix)
 	simData.("agent"+idx).controlOutput.plot();
-% 	simData.("agent"+idx).v.plot();
-% 	simData.("agent"+idx).x.plot();
 end
 %% 
 output = model.Output("controlOutput", "C", C, "C0", C0, "C1", C1);
@@ -149,13 +133,6 @@ for indEv = 1:length(eigVals)
        observable = false; 
     end
 end
-%% 
-
-% exogenousInput = {"disturbance", disturbance, "S", S, "reference", reference*0};
-% simDataDist = tool.simulateInternalModel(simulationSetting, mas, imc, "initialCondition", ic, "exogenousInput", exogenousInput, "c", c, "R", R, "Q", Q, "adaptationDelay", adaptationDelay);
-% exogenousInput = {"disturbance", disturbance*0, "S", S, "reference", reference};
-% simDataRef = tool.simulateInternalModel(simulationSetting, mas, imc, "initialCondition", ic, "exogenousInput", exogenousInput, "c", c, "R", R, "Q", Q, "adaptationDelay", adaptationDelay);
-
 %% 
 basepath = "C:\Users\xzb84\Documents\tarikspapers\IJRNC cooperative robust hyperbolic\data";
 if exportData
